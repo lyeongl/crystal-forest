@@ -129,36 +129,74 @@ crystal-forest/
 
 ## 상품 추가하기
 
-1. `content/products/` 에 새 폴더 생성. 폴더명은 정렬용 prefix + slug:
-   ```
-   content/products/10-jasmine/
-   └── index.mdx
-   ```
-2. `index.mdx` 작성 — 기존 상품 (예: `01-lilac/index.mdx`) 을 복사해서 수정하면 빠릅니다.
-   ```mdx
-   ---
-   id: jasmine
-   order: 10
-   name: 자스민
-   en: Jasmine
-   price: 50000
-   tag: new                          # "new" | "best" | null
-   color: "#f5f0e8"
-   crop: "center 40%"                # CSS object-position
-   poem: 여름 밤의 흰 향기
-   cover: ./cover.jpg
-   specs:
-     소재: 크리스탈 비즈 · 폴리코드
-     크기: 약 5.5 × 4.5 cm
-     제작: 100% 수작업 · 7일 소요
-     포함: 벨벳 파우치 · 손편지
-   publishedAt: 2026-05-01
-   ---
+### 1단계: 콘텐츠 파일 생성
 
-   본문은 자유롭게 — 모달 본문에 표시됩니다.
-   ```
-3. `public/products/10-jasmine/cover.jpg` 위치에 메인 이미지 저장.
-4. `npm run dev` — 자동 반영. frontmatter 누락이나 오타가 있으면 빌드 시 Zod 에러가 어떤 필드가 문제인지 알려줍니다.
+`content/products/{번호}-{slug}/index.mdx` 를 만듭니다.
+
+```
+content/products/10-jasmine/
+└── index.mdx
+```
+
+기존 상품(예: `01-lilac/index.mdx`)을 복사해서 수정하면 빠릅니다.
+
+```mdx
+---
+id: jasmine
+order: 10
+name: 자스민
+en: Jasmine
+price: 50000
+tag: new
+color: "#f5f0e8"
+crop: "center 40%"
+poem: 여름 밤의 흰 향기
+cover: ./cover.jpg
+specs:
+  소재: 크리스탈 비즈 · 폴리코드
+  크기: 약 5.5 × 4.5 cm
+  제작: 100% 수작업 · 7일 소요
+publishedAt: 2026-05-01
+---
+
+본문은 자유롭게 — 모달 본문에 표시됩니다.
+```
+
+### 2단계: 메인 이미지 배치
+
+`public/products/10-jasmine/cover.jpg` 위치에 이미지를 넣습니다.
+
+이미지는 **1200px 폭, 85% quality** 로 리사이징 권장합니다. 원본(4032x3024)은 3~4MB이지만, 리사이징하면 300~400KB로 줄어 로딩이 훨씬 빠릅니다.
+
+### 3단계: 확인
+
+`npm run dev` — 자동 반영. frontmatter 누락이나 오타가 있으면 빌드 시 Zod 에러가 어떤 필드가 문제인지 알려줍니다.
+
+### Frontmatter 필드 스펙
+
+| 필드 | 타입 | 필수 | 설명 |
+|---|---|---|---|
+| `id` | string | O | URL slug로 사용 (`/products/{id}`) |
+| `order` | int | O | 정렬 순서 (낮을수록 앞) |
+| `name` | string | O | 한글 이름 |
+| `en` | string | O | 영문 이름 |
+| `price` | int | O | 가격 (원, 0 이상) |
+| `tag` | `"new"` \| `"best"` \| `null` | - | 필터 태그 (기본 `null`) |
+| `color` | string | O | 카드 배경색 (hex, 예: `"#f5f0e8"`) |
+| `crop` | string | O | CSS `object-position` (예: `"center 40%"`) |
+| `poem` | string | O | 한 줄 설명 (카드에 표시) |
+| `cover` | string | O | 커버 이미지 경로 (항상 `./cover.jpg`) |
+| `specs` | Record | O | 스펙 key-value 맵 (자유 구성, 예: 소재/크기/제작) |
+| `publishedAt` | date | O | 게시일 (`YYYY-MM-DD`) |
+
+> `specs`는 자유로운 key-value 맵입니다. 항목을 추가하거나 빼도 UI가 자동으로 맞춰집니다.
+
+### 이미지 관리
+
+| 경로 | 용도 |
+|---|---|
+| `public/products/{번호}-{slug}/cover.jpg` | 서빙용 이미지 (리사이징됨) |
+| `public/products/_originals/{번호}-{slug}.jpg` | 원본 백업 |
 
 > **Sanity 마이그레이션 시**: frontmatter 필드명이 그대로 GROQ 쿼리 필드와 1:1 매칭되도록 설계되어 있어요. `lib/content/products.ts` 의 `loadAll()` 만 Sanity 클라이언트 호출로 바꾸면 됩니다.
 
