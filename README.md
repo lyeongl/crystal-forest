@@ -1,5 +1,7 @@
 # Crystal Forest 🌿
 
+https://crystal-forest-nine.vercel.app/
+
 손으로 꿴 크리스탈 비즈 곰돌이 — 꽃의 이름과 숲의 이야기를 담은 키링 컬렉션 사이트.
 
 **Stack**: Next.js 15 (App Router) · React 19 · TypeScript (strict) · Tailwind CSS v4 · Zustand · MDX + Zod
