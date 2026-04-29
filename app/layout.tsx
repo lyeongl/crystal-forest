@@ -9,6 +9,7 @@ import { NavBar } from "@/components/nav/NavBar";
 import { CartDrawer } from "@/components/cart/CartDrawer";
 import { CartToast } from "@/components/cart/CartToast";
 import { TweaksPanel } from "@/components/tweaks/TweaksPanel";
+import { ProductModal } from "@/components/product/ProductModal";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://crystal-forest.kr"),
@@ -29,10 +30,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-  modal,
 }: Readonly<{
   children: React.ReactNode;
-  modal: React.ReactNode;
 }>) {
   return (
     <html lang="ko" className={fontVariableClasses}>
@@ -49,7 +48,7 @@ export default function RootLayout({
         <Canopy />
         <NavBar />
         {children}
-        {modal}
+        <ProductModal />
         <CartDrawer />
         <CartToast />
         <TweaksPanel />

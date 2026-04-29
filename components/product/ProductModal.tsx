@@ -1,16 +1,17 @@
 "use client";
 
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import type { Product } from "@/lib/content/schema";
+import { useModal } from "@/lib/modal/store";
 import { ProductDetail } from "./ProductDetail";
 
-export function ProductModal({ product }: { product: Product }) {
-  const router = useRouter();
+export function ProductModal() {
+  const product = useModal((s) => s.product);
+  const close = useModal((s) => s.close);
 
   useEffect(() => {
+    if (!product) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") router.back();
+      if (e.key === "Escape") close();
     };
     const scrollbarW = window.innerWidth - document.documentElement.clientWidth;
     document.body.style.setProperty("--scrollbar-w", `${scrollbarW}px`);
@@ -21,20 +22,22 @@ export function ProductModal({ product }: { product: Product }) {
       document.body.classList.remove("cf-modal-open");
       document.body.style.removeProperty("--scrollbar-w");
     };
-  }, [router]);
+  }, [product, close]);
+
+  if (!product) return null;
 
   return (
-    <div className="cf-modal-backdrop" onClick={() => router.back()}>
+    <div className="cf-modal-backdrop" onClick={close}>
       <div className="cf-modal" onClick={(e) => e.stopPropagation()}>
         <button
           type="button"
           className="cf-modal-close"
-          onClick={() => router.back()}
+          onClick={close}
           aria-label="Close"
         >
           ×
         </button>
-        <ProductDetail product={product} onAdded={() => router.back()} />
+        <ProductDetail product={product} onAdded={close} />
       </div>
     </div>
   );

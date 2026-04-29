@@ -1,25 +1,24 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { Sparkles } from "@/components/effects/Sparkles";
+import { useModal } from "@/lib/modal/store";
 import type { Product } from "@/lib/content/schema";
 
 export function ProductCard({
   product,
   index,
-  scroll = false,
 }: {
   product: Product;
   index: number;
-  scroll?: boolean;
 }) {
+  const open = useModal((s) => s.open);
+
   return (
-    <Link
-      href={`/products/${product.slug}`}
-      scroll={scroll}
-      prefetch={true}
+    <button
+      type="button"
       className="cf-allcoll-card"
+      onClick={() => open(product)}
     >
       {product.tag && (
         <span className="tag">{product.tag === "new" ? "new ♡" : "best"}</span>
@@ -46,6 +45,6 @@ export function ProductCard({
           </div>
         </div>
       </div>
-    </Link>
+    </button>
   );
 }

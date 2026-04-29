@@ -1,3 +1,5 @@
+"use client";
+
 import { ProductCard } from "./ProductCard";
 import { CollectionMore } from "./CollectionMore";
 import type { Product } from "@/lib/content/schema";
